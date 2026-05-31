@@ -10,21 +10,17 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ── STATIC FILES ──────────────────────────────────────────────
-// Admin static assets (css, js inside public/)
+// ── ADMIN STATIC ASSETS ───────────────────────────────────────
 app.use('/admin', express.static(path.join(__dirname, 'public')));
-
-// Frontend static assets — but DO NOT auto-serve index.html
-app.use(express.static(path.join(__dirname, '../frontend'), { index: false }));
 
 // ── ROUTES ────────────────────────────────────────────────────
 
-// Root → frontend portfolio
+// Root → admin panel
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Admin panel → handles /admin and /admin/
+// Admin panel
 app.get(['/admin', '/admin/'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
@@ -32,7 +28,7 @@ app.get(['/admin', '/admin/'], (req, res) => {
 // ── API ───────────────────────────────────────────────────────
 app.get('/api/message', (req, res) => {
   res.json({
-    message: "Backend connected — Welcome to Anna Samson Robert's Portfolio API.",
+    message:   "Backend connected — Welcome to Anna Samson Robert's Portfolio API.",
     status:    'online',
     timestamp: new Date().toISOString()
   });
@@ -103,7 +99,6 @@ app.use((req, res) => {
 // ── START SERVER ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
-  console.log(`🌐 Portfolio → http://localhost:${PORT}`);
-  console.log(`🔧 Admin     → http://localhost:${PORT}/admin`);
-  console.log(`📡 API       → http://localhost:${PORT}/api/profile`);
+  console.log(`🔧 Admin → http://localhost:${PORT}`);
+  console.log(`📡 API   → http://localhost:${PORT}/api/profile`);
 });
