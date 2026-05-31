@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anna Samson Robert | Data Scientist</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body data-theme="ocean">
+
+  <!-- THEME SWITCHER -->
+  <div class="theme-bar">
+    <span class="theme-label">Theme</span>
+    <button class="theme-btn active" data-theme="ocean" title="Ocean Navy">🌊</button>
+    <button class="theme-btn" data-theme="purple" title="Deep Purple">💜</button>
+  </div>
+
+  <!-- NAVIGATION -->
+  <nav id="navbar">
+    <div class="nav-logo">Anna<span>.</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="/admin">Admin</a></li>
+    </ul>
+    <div class="nav-toggle" id="navToggle">&#9776;</div>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <p class="hero-tag">Data Science Finalist · EASTC University</p>
+        <h1>Anna Samson<br/><span class="accent">Robert</span></h1>
+        <p class="hero-desc">
+          Transforming raw data into powerful insights. Specializing in machine learning,
+          data visualization, and predictive analytics.
+        </p>
+        <div class="hero-btns">
+          <a href="#projects" class="btn-primary">View My Work</a>
+          <a href="#contact" class="btn-outline">Get In Touch</a>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <div class="photo-ring">
+          <img id="profilePhoto" src="" alt="Anna Samson Robert" />
+          <div class="photo-placeholder" id="photoPlaceholder"><span>ASR</span></div>
+        </div>
+        <div class="floating-badge badge-1">Python Expert</div>
+        <div class="floating-badge badge-2">ML Engineer</div>
+      </div>
+    </div>
+    <div class="hero-scroll">↓ scroll</div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-inner">
+      <div class="section-tag">01 / About</div>
+      <h2 class="section-title">Who I Am</h2>
+      <div class="about-grid">
+        <div class="about-text">
+          <p>I am <strong>Anna Samson Robert</strong>, a final-year Data Science student at
+          <strong>EASTC University</strong> (Eastern Africa Statistical Training Centre) in Tanzania.
+          I am passionate about using data to solve real-world problems across healthcare, finance, and agriculture.</p>
+          <p>With hands-on experience in Python, machine learning, and statistical modeling,
+          I build models that don't just predict — they explain and inspire action.</p>
+          <div class="about-stats">
+            <div class="stat"><span class="stat-num">4+</span><span class="stat-label">Years Studying</span></div>
+            <div class="stat"><span class="stat-num">10+</span><span class="stat-label">Projects Done</span></div>
+            <div class="stat"><span class="stat-num">5+</span><span class="stat-label">Tools Mastered</span></div>
+          </div>
+        </div>
+        <div class="about-details">
+          <div class="detail-card">
+            <div class="detail-icon">🎓</div>
+            <div><strong>BSc Data Science</strong><p>EASTC University — Finalist (2024/2025)</p></div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-icon">📍</div>
+            <div><strong>Location</strong><p>Dar es Salaam, Tanzania</p></div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-icon">📧</div>
+            <div><strong>Email</strong><p id="displayEmail">annarobert.icloud.com</p></div>
+          </div>
+          <div class="detail-card">
+            <div class="detail-icon">📱</div>
+            <div><strong>Phone</strong><p id="displayPhone">0745 631 972</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="section-inner">
+      <div class="section-tag">02 / Skills</div>
+      <h2 class="section-title">Technical Skills</h2>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <div class="skill-icon">🐍</div>
+          <h3>Python</h3>
+          <p>Pandas, NumPy, Matplotlib, Seaborn, Scikit-learn</p>
+          <div class="skill-bar"><div class="skill-fill" style="width:92%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🤖</div>
+          <h3>Machine Learning</h3>
+          <p>Regression, Classification, Clustering, Neural Networks</p>
+          <div class="skill-bar"><div class="skill-fill" style="width:85%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📊</div>
+          <h3>Data Visualization</h3>
+          <p>Power BI, Tableau, Plotly, Matplotlib</p>
+          <div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">🗄️</div>
+          <h3>SQL & Databases</h3>
+          <p>MySQL, PostgreSQL, MongoDB, data wrangling</p>
+          <div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">📈</div>
+          <h3>Statistics</h3>
+          <p>Hypothesis testing, probability, regression analysis</p>
+          <div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div>
+        </div>
+        <div class="skill-card">
+          <div class="skill-icon">☁️</div>
+          <h3>Cloud & APIs</h3>
+          <p>REST APIs, Node.js, Render, Vercel deployment</p>
+          <div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="section-inner">
+      <div class="section-tag">03 / Projects</div>
+      <h2 class="section-title">Featured Projects</h2>
+      <div class="projects-grid" id="projectsGrid">
+        <div class="loading-projects">Loading projects…</div>
+      </div>
+      <div id="apiMessage" class="api-status"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-inner contact-inner">
+      <div class="section-tag">04 / Contact</div>
+      <h2 class="section-title">Let's Connect</h2>
+      <p class="contact-sub">Open to internships, research collaborations, and data science opportunities.</p>
+      <div class="contact-cards">
+        <a href="mailto:annarobert.icloud.com" class="contact-card">
+          <span class="contact-icon">📧</span>
+          <span id="contactEmail">annarobert.icloud.com</span>
+        </a>
+        <a href="tel:0745631972" class="contact-card">
+          <span class="contact-icon">📱</span>
+          <span id="contactPhone">0745 631 972</span>
+        </a>
+        <div class="contact-card">
+          <span class="contact-icon">🎓</span>
+          <span>EASTC University, Tanzania</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 Anna Samson Robert · Data Science Finalist · EASTC University</p>
+    <a href="#" id="adminLink" class="admin-link">⚙ Admin</a>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

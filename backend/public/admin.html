@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — Anna's Portfolio</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --accent:#14b8a6; --accent-2:#0ea5e9;
+      --accent-glow:rgba(20,184,166,0.12);
+      --bg:#0a0f1e; --bg-card:#111827; --bg-secondary:#0d1426;
+      --text:#f0f9ff; --text-sec:#94a3b8; --text-muted:#475569;
+      --border:rgba(20,184,166,0.2);
+      --radius:16px; --radius-sm:8px;
+      --font:'DM Sans',sans-serif; --font-display:'DM Serif Display',serif;
+    }
+    [data-theme="purple"] {
+      --accent:#a855f7; --accent-2:#ec4899;
+      --accent-glow:rgba(168,85,247,0.12);
+      --bg:#0d0a1a; --bg-card:#1a1030; --bg-secondary:#120d24;
+      --text:#faf5ff; --text-sec:#c4b5fd; --text-muted:#6d28d9;
+      --border:rgba(168,85,247,0.25);
+    }
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100vh}
+
+    /* TOPBAR */
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:1rem 2rem;background:var(--bg-secondary);
+      border-bottom:1px solid var(--border);
+      position:sticky;top:0;z-index:50;
+    }
+    .topbar-logo{font-family:var(--font-display);font-size:1.3rem;color:var(--text)}
+    .topbar-logo span{color:var(--accent)}
+    .topbar-right{display:flex;align-items:center;gap:1rem}
+    .theme-toggle{
+      display:flex;background:var(--bg-card);
+      border:1px solid var(--border);border-radius:999px;overflow:hidden;
+    }
+    .theme-toggle button{
+      padding:0.4rem 0.9rem;font-size:0.78rem;border:none;
+      background:transparent;color:var(--text-sec);cursor:pointer;
+      transition:0.2s;font-family:var(--font);
+    }
+    .theme-toggle button.active{background:var(--accent);color:#0a0f1e;font-weight:600}
+    .back-btn{
+      text-decoration:none;color:var(--text-sec);font-size:0.85rem;
+      border:1px solid var(--border);padding:0.4rem 1rem;
+      border-radius:999px;transition:0.2s;
+    }
+    .back-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+    /* LAYOUT */
+    .admin-layout{max-width:1200px;margin:0 auto;padding:2.5rem 2rem}
+    .admin-header{margin-bottom:2.5rem}
+    .admin-header h1{font-family:var(--font-display);font-size:2rem;margin-bottom:0.4rem}
+    .admin-header p{color:var(--text-sec);font-size:0.9rem}
+
+    /* STATS */
+    .stats-row{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:1rem;margin-bottom:2.5rem;
+    }
+    .stat-box{
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:var(--radius-sm);padding:1.4rem;position:relative;overflow:hidden;
+    }
+    .stat-box::after{
+      content:'';position:absolute;top:0;left:0;right:0;height:2px;
+      background:linear-gradient(to right,var(--accent),var(--accent-2));
+    }
+    .s-label{font-size:0.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem}
+    .s-value{font-family:var(--font-display);font-size:2rem;color:var(--accent);line-height:1}
+    .s-sub{font-size:0.75rem;color:var(--text-muted);margin-top:0.3rem}
+
+    /* TWO COLUMN */
+    .admin-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2.5rem}
+
+    /* PANEL */
+    .panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem}
+    .panel-title{
+      font-size:0.75rem;text-transform:uppercase;letter-spacing:2px;
+      color:var(--accent);margin-bottom:1.25rem;font-weight:600;
+    }
+
+    /* PHOTO */
+    .photo-upload-area{display:flex;flex-direction:column;align-items:center;gap:1rem}
+    .photo-preview-circle{
+      width:130px;height:130px;border-radius:50%;
+      border:2px solid var(--accent);background:var(--bg-secondary);
+      overflow:hidden;display:flex;align-items:center;justify-content:center;
+      font-family:var(--font-display);font-size:2.2rem;color:var(--accent);
+    }
+    .photo-preview-circle img{width:100%;height:100%;object-fit:cover;display:none}
+    .upload-btn-label{
+      display:inline-block;padding:0.6rem 1.5rem;
+      background:var(--accent-glow);border:1px solid var(--border);
+      border-radius:999px;cursor:pointer;font-size:0.85rem;
+      color:var(--accent);font-weight:500;transition:0.2s;
+    }
+    .upload-btn-label:hover{background:var(--accent);color:#0a0f1e}
+    #photoInput{display:none}
+    .photo-hint{font-size:0.78rem;color:var(--text-muted);text-align:center}
+
+    /* FORM */
+    .form-group{margin-bottom:1rem}
+    .form-group label{
+      display:block;font-size:0.78rem;color:var(--text-sec);
+      margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.5px;
+    }
+    .form-group input,.form-group textarea{
+      width:100%;padding:0.7rem 1rem;background:var(--bg-secondary);
+      border:1px solid var(--border);border-radius:var(--radius-sm);
+      color:var(--text);font-family:var(--font);font-size:0.88rem;
+      outline:none;transition:border-color 0.2s;
+    }
+    .form-group input:focus,.form-group textarea:focus{border-color:var(--accent)}
+    .form-group textarea{resize:vertical;min-height:80px}
+    .save-btn{
+      width:100%;padding:0.8rem;background:var(--accent);border:none;
+      border-radius:var(--radius-sm);color:#0a0f1e;font-weight:600;
+      font-size:0.9rem;cursor:pointer;font-family:var(--font);transition:0.2s;margin-top:0.5rem;
+    }
+    .save-btn:hover{opacity:0.85}
+    .success-msg{text-align:center;font-size:0.82rem;color:var(--accent);margin-top:0.5rem;height:1.2rem}
+
+    /* API SECTION */
+    .api-section{margin-bottom:2.5rem}
+    .api-section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
+    .api-section-title{font-family:var(--font-display);font-size:1.5rem;color:var(--text)}
+    .refresh-btn{
+      padding:0.5rem 1.2rem;background:var(--accent-glow);
+      border:1px solid var(--border);border-radius:999px;
+      color:var(--accent);font-size:0.82rem;cursor:pointer;
+      font-family:var(--font);font-weight:500;transition:0.2s;
+    }
+    .refresh-btn:hover{background:var(--accent);color:#0a0f1e}
+
+    /* SERVER URL BAR */
+    .server-url-bar{display:flex;gap:0.75rem;margin-bottom:1.5rem;align-items:center}
+    .server-url-bar input{
+      flex:1;padding:0.65rem 1rem;background:var(--bg-secondary);
+      border:1px solid var(--border);border-radius:var(--radius-sm);
+      color:var(--text);font-family:'Courier New',monospace;font-size:0.82rem;outline:none;
+    }
+    .server-url-bar input:focus{border-color:var(--accent)}
+    .url-save-btn{
+      padding:0.65rem 1.25rem;background:var(--accent);border:none;
+      border-radius:var(--radius-sm);color:#0a0f1e;
+      font-weight:600;font-size:0.82rem;cursor:pointer;font-family:var(--font);
+    }
+    .connection-status{
+      display:flex;align-items:center;gap:0.5rem;font-size:0.8rem;
+      padding:0.5rem 1rem;background:var(--bg-card);
+      border:1px solid var(--border);border-radius:999px;color:var(--text-sec);
+    }
+    .conn-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted)}
+    .conn-dot.online{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.6)}
+    .conn-dot.offline{background:#ef4444}
+
+    /* API CARDS */
+    .api-cards-grid{
+      display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.25rem;
+    }
+    .api-card{
+      background:var(--bg-card);border:1px solid var(--border);
+      border-radius:var(--radius);overflow:hidden;transition:0.3s;
+    }
+    .api-card:hover{border-color:var(--accent);transform:translateY(-3px)}
+    .api-card-header{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg-secondary);
+    }
+    .api-method{
+      padding:0.25rem 0.65rem;border-radius:var(--radius-sm);
+      font-size:0.72rem;font-weight:700;letter-spacing:1px;
+    }
+    .method-get{background:rgba(20,184,166,0.15);color:#14b8a6}
+    .method-post{background:rgba(14,165,233,0.15);color:#0ea5e9}
+    .method-put{background:rgba(245,158,11,0.15);color:#f59e0b}
+    .method-delete{background:rgba(239,68,68,0.15);color:#ef4444}
+    .api-status-dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.6)}
+    .api-card-body{padding:1.25rem}
+    .api-card-path{
+      font-family:'Courier New',monospace;font-size:0.9rem;
+      color:var(--accent);margin-bottom:0.5rem;word-break:break-all;
+    }
+    .api-card-desc{font-size:0.83rem;color:var(--text-sec);line-height:1.6;margin-bottom:1rem}
+    .api-card-meta{display:flex;gap:1rem;flex-wrap:wrap}
+    .api-meta-item{display:flex;flex-direction:column;gap:0.2rem}
+    .api-meta-label{font-size:0.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted)}
+    .api-meta-value{font-size:0.8rem;color:var(--text);font-weight:500}
+    .api-card-footer{
+      padding:0.75rem 1.25rem;border-top:1px solid var(--border);display:flex;gap:0.75rem;flex-wrap:wrap;
+    }
+    .test-btn{
+      padding:0.4rem 1rem;background:var(--accent-glow);
+      border:1px solid var(--border);border-radius:var(--radius-sm);
+      color:var(--accent);font-size:0.78rem;cursor:pointer;
+      font-family:var(--font);transition:0.2s;font-weight:500;
+    }
+    .test-btn:hover{background:var(--accent);color:#0a0f1e}
+    .response-preview{
+      margin-top:0.75rem;padding:0.75rem;background:var(--bg-secondary);
+      border:1px solid var(--border);border-radius:var(--radius-sm);
+      font-family:'Courier New',monospace;font-size:0.78rem;
+      color:var(--accent);display:none;word-break:break-all;
+      line-height:1.5;white-space:pre-wrap;max-height:200px;overflow-y:auto;
+    }
+    .api-loading{
+      text-align:center;padding:3rem;color:var(--text-muted);
+      font-size:0.88rem;grid-column:1/-1;
+    }
+
+    @media(max-width:768px){
+      .admin-grid{grid-template-columns:1fr}
+      .server-url-bar{flex-wrap:wrap}
+      .topbar{flex-wrap:wrap;gap:0.75rem}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="topbar-logo">Anna<span>.</span> Admin</div>
+    <div class="topbar-right">
+      <div class="theme-toggle">
+        <button class="active" data-theme="ocean" onclick="setTheme('ocean',this)">🌊 Ocean</button>
+        <button data-theme="purple" onclick="setTheme('purple',this)">💜 Purple</button>
+      </div>
+      <a href="/" class="back-btn" id="portfolioLink">← Portfolio</a>
+    </div>
+  </div>
+
+  <div class="admin-layout">
+
+    <div class="admin-header">
+      <h1>Portfolio Dashboard</h1>
+      <p>Manage your profile photo, info, and monitor all backend API endpoints live.</p>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="s-label">API Endpoints</div>
+        <div class="s-value">4</div>
+        <div class="s-sub">All registered</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Projects</div>
+        <div class="s-value" id="projectCount">—</div>
+        <div class="s-sub">From /api/projects</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Skills</div>
+        <div class="s-value" id="skillCount">—</div>
+        <div class="s-sub">From /api/profile</div>
+      </div>
+      <div class="stat-box">
+        <div class="s-label">Server Status</div>
+        <div class="s-value" id="serverStatusVal">—</div>
+        <div class="s-sub" id="serverStatusSub">Checking…</div>
+      </div>
+    </div>
+
+    <!-- PHOTO + PROFILE -->
+    <div class="admin-grid">
+
+      <!-- PHOTO UPLOAD -->
+      <div class="panel">
+        <div class="panel-title">Profile Photo</div>
+        <div class="photo-upload-area">
+          <div class="photo-preview-circle" id="previewCircle">
+            <img id="previewImg" src="" alt="Preview"/>
+            <span id="previewInitials">ASR</span>
+          </div>
+          <label class="upload-btn-label" for="photoInput">📷 Upload Photo</label>
+          <input type="file" id="photoInput" accept="image/*"/>
+          <p class="photo-hint">JPG, PNG or WEBP · Max 5MB<br/>Saved to browser · shows on portfolio page</p>
+          <button
+            class="save-btn"
+            id="removePhotoBtn"
+            style="background:transparent;border:1px solid var(--border);color:var(--text-sec);"
+          >Remove Photo</button>
+        </div>
+      </div>
+
+      <!-- PROFILE EDITOR -->
+      <div class="panel">
+        <div class="panel-title">Edit Portfolio Info</div>
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="editName" value="Anna Samson Robert"/>
+        </div>
+        <div class="form-group">
+          <label>Title / Role</label>
+          <input type="text" id="editTitle" value="Data Scientist · EASTC University Finalist"/>
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="text" id="editEmail" value="annarobert.icloud.com"/>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" id="editPhone" value="0745 631 972"/>
+        </div>
+        <div class="form-group">
+          <label>Short Bio</label>
+          <textarea id="editBio">Final-year Data Science student at EASTC University. Passionate about machine learning, statistical modeling, and data-driven solutions for East Africa.</textarea>
+        </div>
+        <button class="save-btn" onclick="saveProfile()">💾 Save Changes</button>
+        <div class="success-msg" id="profileMsg"></div>
+      </div>
+    </div>
+
+    <!-- API ENDPOINTS -->
+    <div class="api-section">
+      <div class="api-section-header">
+        <h2 class="api-section-title">Backend API Endpoints</h2>
+        <button class="refresh-btn" onclick="loadApiCards()">↻ Refresh All</button>
+      </div>
+
+      <div class="server-url-bar">
+        <input type="text" id="serverUrlInput" placeholder="https://your-backend.onrender.com"/>
+        <button class="url-save-btn" onclick="saveAndConnect()">Connect</button>
+        <div class="connection-status">
+          <div class="conn-dot" id="connDot"></div>
+          <span id="connLabel">Not connected</span>
+        </div>
+      </div>
+
+      <div class="api-cards-grid" id="apiCardsGrid">
+        <div class="api-loading">Enter your Render backend URL above and click Connect.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ── DETECT OWN URL (works both locally and on Render) ──────
+    const SELF_ORIGIN = window.location.origin;
+    document.getElementById('portfolioLink').href = SELF_ORIGIN + '/';
+
+    // Pre-fill server URL with own origin
+    const savedUrl = localStorage.getItem('backend-url') || SELF_ORIGIN;
+    document.getElementById('serverUrlInput').value = savedUrl;
+
+    // ── THEME ────────────────────────────────────────────────
+    function setTheme(theme, btn) {
+      document.body.setAttribute('data-theme', theme);
+      localStorage.setItem('portfolio-theme', theme);
+      document.querySelectorAll('.theme-toggle button')
+        .forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    const t = localStorage.getItem('portfolio-theme') || 'ocean';
+    document.body.setAttribute('data-theme', t);
+    document.querySelectorAll('.theme-toggle button').forEach(b => {
+      b.classList.toggle('active', b.dataset.theme === t);
+    });
+
+    // ── PHOTO UPLOAD ─────────────────────────────────────────
+    const previewImg      = document.getElementById('previewImg');
+    const previewInitials = document.getElementById('previewInitials');
+    const photoInput      = document.getElementById('photoInput');
+
+    const existingPhoto = localStorage.getItem('profile-photo');
+    if (existingPhoto) {
+      previewImg.src = existingPhoto;
+      previewImg.style.display = 'block';
+      previewInitials.style.display = 'none';
+    }
+
+    photoInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      if (file.size > 5 * 1024 * 1024) { alert('Max file size is 5MB.'); return; }
+      const reader = new FileReader();
+      reader.onload = ev => {
+        const data = ev.target.result;
+        previewImg.src = data;
+        previewImg.style.display = 'block';
+        previewInitials.style.display = 'none';
+        localStorage.setItem('profile-photo', data);
+      };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById('removePhotoBtn').addEventListener('click', () => {
+      localStorage.removeItem('profile-photo');
+      previewImg.src = '';
+      previewImg.style.display = 'none';
+      previewInitials.style.display = 'block';
+      photoInput.value = '';
+    });
+
+    // ── SAVE PROFILE ─────────────────────────────────────────
+    function saveProfile() {
+      localStorage.setItem('portfolio-profile', JSON.stringify({
+        name:  document.getElementById('editName').value,
+        title: document.getElementById('editTitle').value,
+        email: document.getElementById('editEmail').value,
+        phone: document.getElementById('editPhone').value,
+        bio:   document.getElementById('editBio').value,
+      }));
+      const msg = document.getElementById('profileMsg');
+      msg.textContent = '✓ Saved successfully!';
+      setTimeout(() => msg.textContent = '', 3000);
+    }
+
+    const sp = localStorage.getItem('portfolio-profile');
+    if (sp) {
+      const p = JSON.parse(sp);
+      if (p.name)  document.getElementById('editName').value  = p.name;
+      if (p.title) document.getElementById('editTitle').value = p.title;
+      if (p.email) document.getElementById('editEmail').value = p.email;
+      if (p.phone) document.getElementById('editPhone').value = p.phone;
+      if (p.bio)   document.getElementById('editBio').value   = p.bio;
+    }
+
+    // ── API ENDPOINT DEFINITIONS ─────────────────────────────
+    const API_ENDPOINTS = [
+      {
+        method: 'GET', path: '/',
+        description: 'Root health check. Confirms the Express server is running and reachable.',
+        auth: 'None', returns: 'text/plain'
+      },
+      {
+        method: 'GET', path: '/api/message',
+        description: 'Welcome message endpoint. Called by the portfolio frontend to verify backend connectivity.',
+        auth: 'None', returns: 'application/json'
+      },
+      {
+        method: 'GET', path: '/api/profile',
+        description: "Returns Anna's full profile: name, title, university, email, phone, skills array, and social links.",
+        auth: 'None', returns: 'application/json'
+      },
+      {
+        method: 'GET', path: '/api/projects',
+        description: 'Returns all data science projects with title, category, description, technologies, and year.',
+        auth: 'None', returns: 'application/json'
+      },
+    ];
+
+    // ── CONNECT + LOAD ───────────────────────────────────────
+    function saveAndConnect() {
+      const url = document.getElementById('serverUrlInput').value.trim().replace(/\/$/, '');
+      if (!url) return;
+      localStorage.setItem('backend-url', url);
+      checkConnection(url);
+      loadApiCards(url);
+      fetchLiveStats(url);
+    }
+
+    function checkConnection(url) {
+      const dot   = document.getElementById('connDot');
+      const label = document.getElementById('connLabel');
+      const val   = document.getElementById('serverStatusVal');
+      const sub   = document.getElementById('serverStatusSub');
+      dot.className = 'conn-dot';
+      label.textContent = 'Connecting…';
+      fetch(url + '/api/message')
+        .then(r => r.json())
+        .then(() => {
+          dot.className = 'conn-dot online';
+          label.textContent = 'Connected';
+          val.textContent = 'UP';
+          sub.textContent = 'Online ✓';
+        })
+        .catch(() => {
+          dot.className = 'conn-dot offline';
+          label.textContent = 'Unreachable';
+          val.textContent = 'DOWN';
+          sub.textContent = 'Cannot connect';
+        });
+    }
+
+    function fetchLiveStats(url) {
+      fetch(url + '/api/projects')
+        .then(r => r.json())
+        .then(d => { document.getElementById('projectCount').textContent = d.count; })
+        .catch(() => {});
+      fetch(url + '/api/profile')
+        .then(r => r.json())
+        .then(d => { document.getElementById('skillCount').textContent = d.skills ? d.skills.length : '—'; })
+        .catch(() => {});
+    }
+
+    function loadApiCards(url) {
+      const base = (url || localStorage.getItem('backend-url') || SELF_ORIGIN).replace(/\/$/, '');
+      const grid = document.getElementById('apiCardsGrid');
+
+      grid.innerHTML = API_ENDPOINTS.map((ep, i) => `
+        <div class="api-card">
+          <div class="api-card-header">
+            <span class="api-method method-${ep.method.toLowerCase()}">${ep.method}</span>
+            <span class="api-status-dot"></span>
+          </div>
+          <div class="api-card-body">
+            <div class="api-card-path">${base}${ep.path}</div>
+            <div class="api-card-desc">${ep.description}</div>
+            <div class="api-card-meta">
+              <div class="api-meta-item">
+                <span class="api-meta-label">Auth</span>
+                <span class="api-meta-value">${ep.auth}</span>
+              </div>
+              <div class="api-meta-item">
+                <span class="api-meta-label">Returns</span>
+                <span class="api-meta-value">${ep.returns}</span>
+              </div>
+              <div class="api-meta-item">
+                <span class="api-meta-label">Live Status</span>
+                <span class="api-meta-value" id="ep-status-${i}">—</span>
+              </div>
+            </div>
+            <div class="response-preview" id="ep-preview-${i}"></div>
+          </div>
+          <div class="api-card-footer">
+            <button class="test-btn" onclick="testEndpoint('${base}${ep.path}',${i})">▶ Test Live</button>
+            <button class="test-btn" onclick="copyUrl('${base}${ep.path}')">⧉ Copy URL</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Auto-ping all endpoints
+      API_ENDPOINTS.forEach((ep, i) => {
+        fetch(base + ep.path)
+          .then(r => {
+            const el = document.getElementById('ep-status-' + i);
+            el.textContent = r.ok ? '200 OK' : r.status;
+            el.style.color = r.ok ? '#22c55e' : '#ef4444';
+          })
+          .catch(() => {
+            const el = document.getElementById('ep-status-' + i);
+            if (el) { el.textContent = 'Offline'; el.style.color = '#ef4444'; }
+          });
+      });
+    }
+
+    function testEndpoint(url, i) {
+      const preview  = document.getElementById('ep-preview-' + i);
+      const statusEl = document.getElementById('ep-status-' + i);
+      preview.style.display = 'block';
+      preview.textContent = 'Fetching…';
+      fetch(url)
+        .then(r => {
+          statusEl.textContent = r.ok ? '200 OK' : r.status;
+          statusEl.style.color = r.ok ? '#22c55e' : '#ef4444';
+          return r.text();
+        })
+        .then(text => {
+          try { preview.textContent = JSON.stringify(JSON.parse(text), null, 2); }
+          catch { preview.textContent = text; }
+        })
+        .catch(err => {
+          preview.textContent = '✗ ' + err.message;
+          statusEl.textContent = 'Error';
+          statusEl.style.color = '#ef4444';
+        });
+    }
+
+    function copyUrl(url) {
+      navigator.clipboard.writeText(url)
+        .then(() => alert('Copied: ' + url))
+        .catch(() => alert('URL: ' + url));
+    }
+
+    // ── AUTO-INIT ON PAGE LOAD ────────────────────────────────
+    // Since admin is on the same server, connect to self automatically
+    checkConnection(SELF_ORIGIN);
+    loadApiCards(SELF_ORIGIN);
+    fetchLiveStats(SELF_ORIGIN);
+  </script>
+</body>
+</html>
