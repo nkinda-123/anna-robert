@@ -11,26 +11,29 @@ app.use(cors());
 app.use(express.json());
 
 // ── STATIC FILES ──────────────────────────────────────────────
-app.use(express.static(path.join(__dirname, '../frontend')));
+// Admin static assets (css, js inside public/)
 app.use('/admin', express.static(path.join(__dirname, 'public')));
+
+// Frontend static assets — but DO NOT auto-serve index.html
+app.use(express.static(path.join(__dirname, '../frontend'), { index: false }));
 
 // ── ROUTES ────────────────────────────────────────────────────
 
-// Admin panel — handles both /admin and /admin/
-app.get(['/admin', '/admin/'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
-});
-
-// Portfolio homepage
+// Root → frontend portfolio
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend', 'index.html'));
+});
+
+// Admin panel → handles /admin and /admin/
+app.get(['/admin', '/admin/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
 // ── API ───────────────────────────────────────────────────────
 app.get('/api/message', (req, res) => {
   res.json({
     message: "Backend connected — Welcome to Anna Samson Robert's Portfolio API.",
-    status: 'online',
+    status:    'online',
     timestamp: new Date().toISOString()
   });
 });
@@ -57,7 +60,7 @@ app.get('/api/projects', (req, res) => {
     count: 4,
     projects: [
       {
-        id: 1,
+        id:           1,
         title:        'Crop Yield Prediction',
         category:     'Machine Learning',
         description:  'Random Forest model predicting crop yields across Tanzania using climate and soil data. 91% accuracy.',
@@ -65,7 +68,7 @@ app.get('/api/projects', (req, res) => {
         year:         2024
       },
       {
-        id: 2,
+        id:           2,
         title:        'COVID-19 East Africa Dashboard',
         category:     'Data Visualization',
         description:  'Interactive Power BI dashboard tracking COVID-19 trends across 6 East African countries.',
@@ -73,7 +76,7 @@ app.get('/api/projects', (req, res) => {
         year:         2023
       },
       {
-        id: 3,
+        id:           3,
         title:        'Swahili Sentiment Analysis',
         category:     'NLP',
         description:  'NLP model trained on Swahili social media to classify sentiment for local businesses.',
@@ -81,7 +84,7 @@ app.get('/api/projects', (req, res) => {
         year:         2024
       },
       {
-        id: 4,
+        id:           4,
         title:        'Student Performance Analysis',
         category:     'Statistics',
         description:  'Statistical study of EASTC student performance using regression and hypothesis testing.',
@@ -100,7 +103,7 @@ app.use((req, res) => {
 // ── START SERVER ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
-  console.log(`🌐 Portfolio  → http://localhost:${PORT}`);
-  console.log(`🔧 Admin      → http://localhost:${PORT}/admin`);
-  console.log(`📡 API        → http://localhost:${PORT}/api/profile`);
+  console.log(`🌐 Portfolio → http://localhost:${PORT}`);
+  console.log(`🔧 Admin     → http://localhost:${PORT}/admin`);
+  console.log(`📡 API       → http://localhost:${PORT}/api/profile`);
 });
