@@ -10,18 +10,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// ── ADMIN STATIC ASSETS ───────────────────────────────────────
+// ── STATIC FILES (admin assets: css, js, images inside public/)
 app.use('/admin', express.static(path.join(__dirname, 'public')));
 
 // ── ROUTES ────────────────────────────────────────────────────
 
-// Root → admin panel
-app.get('/', (req, res) => {
+// Admin panel — MUST be before the catch-all
+app.get(['/admin', '/admin/'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
-// Admin panel
-app.get(['/admin', '/admin/'], (req, res) => {
+// Root → admin panel (since frontend is on Vercel)
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
 
@@ -99,6 +99,9 @@ app.use((req, res) => {
 // ── START SERVER ──────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
-  console.log(`🔧 Admin → http://localhost:${PORT}`);
-  console.log(`📡 API   → http://localhost:${PORT}/api/profile`);
+  console.log(`🔧 Admin      → http://localhost:${PORT}`);
+  console.log(`🔧 Admin      → http://localhost:${PORT}/admin`);
+  console.log(`📡 API        → http://localhost:${PORT}/api/profile`);
+  console.log(`📡 API        → http://localhost:${PORT}/api/projects`);
+  console.log(`📡 API        → http://localhost:${PORT}/api/message`);
 });
